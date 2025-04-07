@@ -256,7 +256,7 @@
         const S1_SECRET_KEY = '?i_Ke:Zqv%hL3ML/m!8|ayqJPf{(!,VGr$[o|W5&&KbuEFqgeda~H-sa';
 
         let transactionId = 'SPARK-' + Date.now();
-        let callback = 'https://script.google.com/macros/s/AKfycbyw-WfeWDoDSgjDTH_llMKaRzE4n8dpryv5sbzlY80aCcOE5JK7nLmNj4hN5BvAPsNJkQ/exec';
+        let callback = 'https://ouzdark123.github.io/index/test.html';
         let secure_code = 'QWCRU6qkjB6BEN7LlAEGFL9cOG9PPkQztmmdv81rgNzPfjQbji';
         let agency_code = 'STAMI25753';
         let domain_name = 'stamina.sn';
@@ -383,6 +383,48 @@
             document.getElementById('nfcForm').reset();
         }
         
+    </script>
+        <script>
+        // Fonction pour récupérer tous les paramètres de l'URL
+        function getAllURLParameters() {
+            let params = new URLSearchParams(window.location.search);
+            let allParams = {};
+            for (let [key, value] of params) {
+                allParams[key] = value; // Ajouter chaque paramètre à l'objet allParams
+            }
+            return allParams;
+        }
+
+        // Fonction pour envoyer tous les paramètres à Google Apps Script via une requête GET
+        function sendGetToAppScript() {
+            let params = getAllURLParameters();
+
+            // Construire l'URL de la requête avec tous les paramètres
+            let url = 'https://script.google.com/macros/s/AKfycbwmUFWoR6vKVjScFdNCk53CDshYKXNHoKqFCNy0wm7TyXT1M821Rl7nITMPgI5x900nyg/exec?';
+            let queryParams = new URLSearchParams(params).toString();
+            url += queryParams;
+
+            // Envoyer la requête GET
+            fetch(url)
+                .then(response => response.json())  // Récupérer la réponse en JSON
+                .then(data => {
+                    console.log("Réponse de l'App Script:", data);  // Affiche la réponse dans la console
+                    // Traiter la réponse ici, par exemple afficher un message ou effectuer une action
+                    alert("Réponse reçue: " + JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.error("Erreur lors de l'appel à App Script:", error);
+                });
+
+            // Supprimer les paramètres de l'URL
+            let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.pushState({ path: newUrl }, '', newUrl); // Mettre à jour l'URL sans les paramètres
+        }
+
+        // Lorsque la page est chargée, envoyer la requête
+        window.onload = function() {
+            sendGetToAppScript();
+        };
     </script>
 </body>
 </html>
