@@ -1,16 +1,54 @@
-<h1>
-    hhh
-</h1>
-<script>
-    fetch('https://script.google.com/macros/s/AKfycbwmUFWoR6vKVjScFdNCk53CDshYKXNHoKqFCNy0wm7TyXT1M821Rl7nITMPgI5x900nyg/exec?num_command=SPARK-1744058020551&errorCode=200', {
-  method: 'GET',
-  mode: 'no-cors' // Mode qui désactive la vérification CORS, mais la réponse sera opaque
-})
-.then(response => {
-  console.log('Réponse:', response);
-})
-.catch(error => {
-  console.error('Erreur:', error);
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envoyer la commande</title>
+    <script>
+        // Fonction pour récupérer tous les paramètres de l'URL
+        function getAllURLParameters() {
+            let params = new URLSearchParams(window.location.search);
+            let allParams = {};
+            for (let [key, value] of params) {
+                allParams[key] = value; // Ajouter chaque paramètre à l'objet allParams
+            }
+            return allParams;
+        }
 
-</script>
+        // Fonction pour envoyer tous les paramètres à Google Apps Script via une requête GET
+        function sendGetToAppScript() {
+            let params = getAllURLParameters();
+
+            // Construire l'URL de la requête avec tous les paramètres
+            let url = 'https://script.google.com/macros/s/AKfycbwmUFWoR6vKVjScFdNCk53CDshYKXNHoKqFCNy0wm7TyXT1M821Rl7nITMPgI5x900nyg/exec?';
+            let queryParams = new URLSearchParams(params).toString();
+            url += queryParams;
+
+            // Envoyer la requête GET
+            fetch(url)
+                .then(response => response.json())  // Récupérer la réponse en JSON
+                .then(data => {
+                    console.log("Réponse de l'App Script:", data);  // Affiche la réponse dans la console
+                    // Traiter la réponse ici, par exemple afficher un message ou effectuer une action
+                    alert("Réponse reçue: " + JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.error("Erreur lors de l'appel à App Script:", error);
+                });
+
+            // Supprimer les paramètres de l'URL
+            let newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.pushState({ path: newUrl }, '', newUrl); // Mettre à jour l'URL sans les paramètres
+        }
+
+        // Lorsque la page est chargée, envoyer la requête
+        window.onload = function() {
+            sendGetToAppScript();
+        };
+    </script>
+</head>
+<body>
+    <h1>Commande</h1>
+    <p>Les informations de la commande sont envoyées à App Script.</p>
+</body>
+</html>
