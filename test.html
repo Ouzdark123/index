@@ -1,13 +1,49 @@
-<script>
-    fetch('https://script.google.com/macros/s/AKfycbwmUFWoR6vKVjScFdNCk53CDshYKXNHoKqFCNy0wm7TyXT1M821Rl7nITMPgI5x900nyg/exec?num_command=SPARK-1744058020551&errorCode=200', {
-  method: 'GET',
-  mode: 'no-cors' // Mode qui désactive la vérification CORS, mais la réponse sera opaque
-})
-.then(response => {
-  console.log('Réponse:', response);
-})
-.catch(error => {
-  console.error('Erreur:', error);
-});
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envoyer la commande</title>
+    <script>
+        // Fonction pour récupérer les paramètres de l'URL
+        function getURLParameters() {
+            let params = new URLSearchParams(window.location.search);
+            return {
+                num_transaction_from_gu: params.get("num_transaction_from_gu"),
+                num_command: params.get("num_command"),
+                amount: params.get("amount"),
+                errorCode: params.get("errorCode")
+            };
+        }
 
-</script>
+        // Fonction pour envoyer la requête GET à Google Apps Script
+        function sendGetToAppScript() {
+            let params = getURLParameters();
+
+            // Construire l'URL de la requête
+            let url = `https://script.google.com/macros/s/AKfycbyJbwnz8XNJTTwOPzPbE1ny7N2OIjJEubRq4uM-oQH8TA0hhnVkqD31w-9nenNukYOT-A/exec?num_command=${params.num_command}&errorCode=${params.errorCode}`;
+
+            // Envoyer la requête GET
+            fetch(url)
+                .then(response => response.json())  // Récupérer la réponse JSON
+                .then(data => {
+                    console.log("Réponse de l'App Script:", data);  // Affiche la réponse dans la console
+                    // Traiter la réponse ici, par exemple afficher un message ou effectuer une action
+                    alert("Réponse reçue: " + JSON.stringify(data));
+                })
+                .catch(error => {
+                    console.error("Erreur lors de l'appel à App Script:", error);
+                });
+        }
+
+        // Lorsque la page est chargée, envoyer la requête
+        window.onload = function() {
+            sendGetToAppScript();
+        };
+    </script>
+</head>
+<body>
+    <h1>Commande</h1>
+    <p>Les informations de la commande sont envoyées à App Script.</p>
+</body>
+</html>
