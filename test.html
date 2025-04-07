@@ -1,56 +1,13 @@
 <script>
-    //
+    fetch('https://script.google.com/macros/s/AKfycbyJbwnz8XNJTTwOPzPbE1ny7N2OIjJEubRq4uM-oQH8TA0hhnVkqD31w-9nenNukYOT-A/exec?num_command=SPARK-1744058020551&errorCode=200', {
+  method: 'GET',
+  mode: 'no-cors' // Mode qui désactive la vérification CORS, mais la réponse sera opaque
+})
+.then(response => {
+  console.log('Réponse:', response);
+})
+.catch(error => {
+  console.error('Erreur:', error);
+});
 
-
-    // 1. Fonction pour récupérer les paramètres GET depuis l'URL actuelle
-function getUrlParams() {
-  const params = {};
-  const queryString = window.location.search.substring(1);
-  const vars = queryString.split("&");
-
-  for (let i = 0; i < vars.length; i++) {
-    const pair = vars[i].split("=");
-    params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
-  }
-
-  return params;
-}
-
-// 2. Envoie la requête GET à l'App Script
-function sendGetToAppScript() {
-  const params = getUrlParams();
-  
-  // Assure-toi que ces paramètres existent
-  const numCommand = params.num_command;
-  const errorCode = params.errorCode;
-
-  if (!numCommand || !errorCode) {
-    console.error("Paramètres GET manquants !");
-    return;
-  }
-
-  // URL de ton script Google Apps Script (déployé en tant que Web App)
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbyJbwnz8XNJTTwOPzPbE1ny7N2OIjJEubRq4uM-oQH8TA0hhnVkqD31w-9nenNukYOT-A/exec';
-
-  // Construction de l’URL finale avec les paramètres
-  const finalURL = `${scriptURL}?num_command=${encodeURIComponent(numCommand)}&errorCode=${encodeURIComponent(errorCode)}`;
-
-  // 3. Envoie de la requête GET
-  fetch(finalURL)
-    .then(response => response.json())
-    .then(data => {
-      console.log("Réponse reçue depuis App Script :", data);
-
-      // Affiche un message clair à l'utilisateur si besoin
-      alert(data.message); // Ex : "Transaction réussie", "échouée", etc.
-    })
-    .catch(error => {
-      console.error("Erreur lors de l’appel à App Script :", error);
-    });
-}
-
-// Appelle automatiquement la fonction au chargement de la page
-window.onload = sendGetToAppScript;
-
-  </script>
-  
+</script>
